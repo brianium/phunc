@@ -13,7 +13,7 @@ use Brianium\Phunc\Arrays as _array;
 function partial(callable $func /** args **/) {
     $rest = _array\rest(func_get_args());
     return function() use ($func, $rest) {
-        return call_user_func_array($func, array_merge($rest, func_get_args()));
+        return call_user_func_array($func, _array\concat($rest, func_get_args()));
     };
 }
 
@@ -26,7 +26,7 @@ function partial(callable $func /** args **/) {
 function partialRight(callable $func /** args **/) {
     $rest = _array\rest(func_get_args());
     return function() use ($func, $rest) {
-        return call_user_func_array($func, array_merge(func_get_args(), $rest));
+        return call_user_func_array($func, _array\concat(func_get_args(), array_reverse($rest)));
     };
 }
 
@@ -61,7 +61,7 @@ function curry1(callable $func) {
 function curry2(callable $func, $order = 0) {
     return function($arg1) use ($func, $order) {
         return function() use ($func, $arg1, $order) {
-            $args = ($order > 0) ? array_merge(func_get_args(), [$arg1]) : array_merge([$arg1], func_get_args());
+            $args = ($order > 0) ? _array\concat(func_get_args(), [$arg1]) : _array\concat([$arg1], func_get_args());
             return call_user_func_array($func, $args);
         };
     };
@@ -78,7 +78,7 @@ function curry3(callable $func, $order = 0) {
     return function($arg1) use ($func, $order) {
         return function($arg2) use ($func, $arg1, $order) {
             return function() use ($func, $arg1, $arg2, $order) {
-                $args = ($order > 0) ? array_merge(func_get_args(), [$arg2, $arg1]) : array_merge([$arg1, $arg2], func_get_args());
+                $args = ($order > 0) ? _array\concat(func_get_args(), [$arg2, $arg1]) : _array\concat([$arg1, $arg2], func_get_args());
                 return call_user_func_array($func, $args);
             };
         };
@@ -107,4 +107,21 @@ function curry(callable $func, $arity = 1) {
 function curryRight(callable $func, $arity = 1) {
     $fn = __NAMESPACE__ . '\\' . "curry$arity";
     return (function_exists($fn)) ? call_user_func_array($fn, [$func, 1]) : false;
+}
+
+/**
+ * Compose a group of functions such that every
+ * function is called with the result of the function to
+ * it's right
+ *
+ * @return callable
+ */
+function compose(/** functions */) {
+    $functions = array_filter(func_get_args(), 'is_callable');
+    return function () use ($functions) {
+        $result = func_get_args();
+        while ($fn = array_pop($functions))
+            $result = [call_user_func_array($fn, $result)];
+        return $result[0];
+    };
 }
