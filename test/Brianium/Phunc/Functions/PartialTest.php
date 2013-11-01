@@ -6,7 +6,7 @@ namespace Brianium\Phunc\Functions;
  */
 loadModule('Functions');
 
-class FunctionsTest extends \PHPUnit_Framework_TestCase
+class PartialTest extends \PHPUnit_Framework_TestCase
 {
     protected $testValue = 'test';
 
@@ -66,6 +66,17 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         $name = ' brian';
         $fixed = partial([$this, 'sayHello'], $name);
         $this->assertEquals("hello!$name", $fixed());
+    }
+
+    public function test_partialRight_function_application()
+    {
+        $greeting = function($greet, $name) {
+            return "$greet $name";
+        };
+
+        $greetBrian = partialRight($greeting, 'Brian');
+
+        $this->assertEquals('Hello! Brian', $greetBrian('Hello!'));
     }
 
     /**
