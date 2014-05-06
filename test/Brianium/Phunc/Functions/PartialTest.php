@@ -1,11 +1,6 @@
 <?php
 namespace Brianium\Phunc\Functions;
 
-/**
- * Require the functions module
- */
-loadModule('Functions');
-
 class PartialTest extends \PHPUnit_Framework_TestCase
 {
     protected $testValue = 'test';

@@ -1,6 +1,5 @@
 <?php
 namespace Brianium\Phunc\Functions;
-loadModule('Functions');
 
 class CurryTest extends \PHPUnit_Framework_TestCase
 {

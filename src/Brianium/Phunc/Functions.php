@@ -1,6 +1,5 @@
 <?php
 namespace Brianium\Phunc\Functions;
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Arrays.php';
 
 use Brianium\Phunc\Arrays as _array;
 

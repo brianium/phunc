@@ -1,6 +1,5 @@
 <?php
 namespace Brianium\Phunc\Functions;
-loadModule('Functions');
 
 class ComposeTest extends \PHPUnit_Framework_TestCase
 {
